@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client_db1 {
+  provider = "prisma-client-js"
+  output   = "./generated/db1"
+}
+
+datasource db1 {
+  provider = "mysql"
+  url      = env("DATABASE_URL_1")
+}
+
+model TypeApartment {
+  id           Int    @id @default(autoincrement())
+  name         String
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+  apartments   Apartment[]
+
+   @@map("type_apartment")
+}
+
+model Apartment {
+  id           Int    @id @default(autoincrement())
+  name         String
+  address      String
+  city         String
+  country      String
+  latitude     Decimal  @db1.Decimal(9, 6)
+  longitude    Decimal  @db1.Decimal(9, 6)
+  isActive    Boolean?  @default(true)
+  typeApartmentId Int @db1.Int
+  typeApartment TypeApartment @relation(fields: [typeApartmentId], references: [id], onDelete: Cascade)
+  rates        ApartmentRate[]
+  reservations      Reservation[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  @@map("apartment")
+}
+
+
+model ApartmentRate {
+  id          Int       @id @default(autoincrement())
+  apartmentId Int
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+  startDate  DateTime
+  endDate    DateTime
+  price      Decimal  @db1.Decimal(10, 2)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+   @@map("apartment_rate")
+}
+
+
+model Customer {
+  id        Int       @id @default(autoincrement())
+  name      String
+  surname   String?
+  email     String    @unique
+  reservations Reservation[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("customer")
+}
+
+
+model ReserveState {
+  id          Int          @id @default(autoincrement())
+  state       String
+  description String?
+  reservations Reservation[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+
+   @@map("reserve_state")
+}
+
+model Reservation {
+  id           Int          @id @default(autoincrement())
+  code         String       @unique
+  startDate   DateTime
+  endDate     DateTime
+  status       Int
+  apartmentId  Int
+  customerId   Int
+  apartment    Apartment    @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  reserveState ReserveState @relation(fields: [status], references: [id], onDelete: Cascade)
+  payments     Payment[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deletedAt    DateTime?
+
+  @@map("reservation")
+}
+
+model PaymentConcept {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  payments    Payment[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+   @@map("payment_concept")
+}
+
+
+model Payment {
+  id            Int            @id @default(autoincrement())
+  reservationId Int
+  conceptId     Int
+  amount        Decimal        @db1.Decimal(10, 2)
+  reservation   Reservation    @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  concept       PaymentConcept @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+
+  @@map("payment")
+}

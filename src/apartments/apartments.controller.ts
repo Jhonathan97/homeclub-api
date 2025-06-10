@@ -69,4 +69,11 @@ export class ApartmentsController {
   async search(@Body() dto: SearchPropertiesDto) {
     return this.apartmentsService.searchApartments(dto);
   }
+
+  @Get('search-country')
+  async searchCountry(@Query() query: GetApartmentsQueryDto) {
+    return this.apartmentsService.getByCountry({
+      ...query,
+    });
+  }
 }

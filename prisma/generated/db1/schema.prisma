@@ -42,6 +42,8 @@ model Apartment {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   deletedAt       DateTime?
+
+  @@map("apartment")
 }
 
 model ApartmentRate {
@@ -67,6 +69,8 @@ model Customer {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   deletedAt    DateTime?
+
+  @@map("customer")
 }
 
 model ReserveState {
@@ -96,6 +100,8 @@ model Reservation {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   deletedAt    DateTime?
+
+  @@map("reservation")
 }
 
 model PaymentConcept {
@@ -120,4 +126,6 @@ model Payment {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   deletedAt     DateTime?
+
+  @@map("payment")
 }

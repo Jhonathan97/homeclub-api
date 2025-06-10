@@ -4,6 +4,10 @@
 
 -- USE homeclub_db1;
 -- Create table types of apartments
+
+SET NAMES 'utf8mb4';
+SET CHARACTER SET utf8mb4;
+
 CREATE TABLE type_apartment (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,

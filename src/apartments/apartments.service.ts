@@ -138,6 +138,7 @@ export class ApartmentsService {
         maxPrice,
       } = dto;
 
+      console.log('Type: ', type);
       if (!latitude || !longitude) {
         throw new BadRequestException('Latitude y longitude son requeridas.');
       }
@@ -233,6 +234,25 @@ export class ApartmentsService {
     } catch (error) {
       console.log('error: ', error);
       throw new InternalServerErrorException('Error al buscar apartamentos');
+    }
+  }
+
+  async getByCountry(filters: { country?: string }) {
+    try {
+      return await this.prisma.apartment.findMany({
+        where: {
+          ...(filters.country && { country: filters.country }),
+        },
+        include: {
+          typeApartment: true,
+        },
+      });
+    } catch (error) {
+      console.log('error: ', error);
+      throw new BadRequestException(
+        'Error al obtener los apartamentos: ',
+        error,
+      );
     }
   }
 }

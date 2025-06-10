@@ -2,6 +2,10 @@
 
 -- USE homeclub_db2;
 -- Create table apartment details 
+
+SET NAMES 'utf8mb4';
+SET CHARACTER SET utf8mb4;
+
 CREATE TABLE apartment_detail (
     id INT AUTO_INCREMENT PRIMARY KEY,
     apartmentId INT NOT NULL UNIQUE,
